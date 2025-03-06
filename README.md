@@ -19,15 +19,7 @@ const geometry = new THREE.TorusKnotGeometry(2, 0.4, 200, 32, 3, 2);
 A torus knot is defined parametrically by:
 
 
-\[
-x = (R + r \cos(qt)) \cos(pt)
-\]
-\[
-y = (R + r \cos(qt)) \sin(pt)
-\]
-\[
-z = r \sin(qt)
-\]
+![Image](https://github.com/user-attachments/assets/2bd4c01d-79cf-470d-abc1-6470f2097860)
 
 
 Where:
