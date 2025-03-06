@@ -17,6 +17,8 @@ const geometry = new THREE.TorusKnotGeometry(2, 0.4, 200, 32, 3, 2);
 
 ### **Mathematics Behind a Torus Knot**
 A torus knot is defined parametrically by:
+
+
 \[
 x = (R + r \cos(qt)) \cos(pt)
 \]
@@ -26,6 +28,8 @@ y = (R + r \cos(qt)) \sin(pt)
 \[
 z = r \sin(qt)
 \]
+
+
 Where:
 - \( t \) is the parameter that varies to create the curve.
 - \( R \) is the major radius (distance from the center of the torus).
