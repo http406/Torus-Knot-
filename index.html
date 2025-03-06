@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torus Knot</title>
+    <style>
+        body { 
+        margin: 0; 
+        outline: none;
+        background: #000;
+        -webkit-tap-highlight-color: transparent;
+        }
+        canvas { display: block; }
+        #infoButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .info-popup {
+            display: none;
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: left;
+            user-select: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <button id="infoButton">&#9432;</button>
+    <div class="info-popup" id="infoPopup">
+        <p style="text-align:center;" ><strong>Torus Knot</strong></p>
+    <p style="color:pink; text-align: center;">A torus knot is a type of mathematical knot that lies on the surface of a torus (a doughnut-shaped surface) and winds around the torus in a specific way. It is defined by two coprime integers p and q, which determine how many times the knot winds around the central hole of the torus (longitude) and how many times it passes through the hole (meridian).</p>
+            <p style="text-align:center;">For Equations visit my Github. Enjoy!</p>
+    </div>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create Trefoil Knot geometry
+        const geometry = new THREE.TorusKnotGeometry(2, 0.4, 200, 32, 3, 2);
+        
+        // Apply rainbow colors
+        const material = new THREE.MeshStandardMaterial({ 
+            vertexColors: true, 
+            roughness: 0.3, 
+            metalness: 0.7 
+        });
+
+        const colors = [];
+        const positionAttribute = geometry.getAttribute('position');
+        const color = new THREE.Color();
+        for (let i = 0; i < positionAttribute.count; i++) {
+            const t = (i / positionAttribute.count) * 0.8;
+            color.setHSL(t, 1.0, 0.5);
+            colors.push(color.r, color.g, color.b);
+        }
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+        const knot = new THREE.Mesh(geometry, material);
+        scene.add(knot);
+
+        // Add stars to create a space background
+        const starGeometry = new THREE.BufferGeometry();
+        const starVertices = [];
+        for (let i = 0; i < 500; i++) {
+            let x = (Math.random() - 0.5) * 100;
+            let y = (Math.random() - 0.5) * 100;
+            let z = (Math.random() - 0.5) * 100;
+            starVertices.push(x, y, z);
+        }
+        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+        const starMaterial = new THREE.PointsMaterial({ size: 0.09, vertexColors: true });
+
+        const starColors = [];
+        for (let i = 0; i < 500; i++) {
+            const starColor = new THREE.Color();
+            starColor.setHSL(Math.random(), 1.0, 0.8);
+            starColors.push(starColor.r, starColor.g, starColor.b);
+        }
+        starGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
+
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+
+        // Lighting
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x404040));
+
+        // Camera position
+        camera.position.z = 10;
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            knot.rotation.x += 0.01;
+            knot.rotation.y += 0.01;
+            stars.rotation.y += 0.001; // Slight movement for the stars
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
+        
+        $("#infoButton").click(function() {
+            $("#infoPopup").fadeToggle();
+        });
+    </script>
+</body>
+  </html>
+    
